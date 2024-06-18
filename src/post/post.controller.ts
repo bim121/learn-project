@@ -1,6 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
 import PostsService from "./post.service";
 import JwtAuthenticationGuard from "src/authentication/jwt-authentication.guard";
+import { FindOneParams } from "src/utils/findOneParams";
+import { UpdatePostDto } from "./dto/updatePost.dto";
 
 @Controller('posts')
 export default class PostsController{
@@ -25,12 +27,12 @@ export default class PostsController{
     }
 
     @Put(':id')
-    async replacePost(@Param('id') id: string, @Body() post: UpdatePostDto){
+    async replacePost(@Param('id') id: FindOneParams, @Body() post: UpdatePostDto){
         return this.postsService.updatePost(Number(id), post);
     }
 
     @Delete(':id')
-    async deletePost(@Param('id') id: string){
+    async deletePost(@Param('id') id: FindOneParams){
         this.postsService.deletePost(Number(id));
     }
 }
