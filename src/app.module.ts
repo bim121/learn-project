@@ -5,10 +5,14 @@ import Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
 import { APP_FILTER } from '@nestjs/core';
 import { ExceptionsLoggerFilter } from './utils/exceptionsLogger.filter';
+import { AuthenticationModule } from './authentication/authentication.module';
+import { CategoriesModule } from './category/category.module';
 
 @Module({
   imports: [
-    PostsModule, 
+    PostsModule,
+    AuthenticationModule,
+    CategoriesModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         POSTGRES_HOST: Joi.string().required(),
