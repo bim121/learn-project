@@ -2,6 +2,8 @@ import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn
 import { Exclude } from 'class-transformer';
 import Address from './address.entity';
 import PostEntity from 'src/post/post.entity';
+import PublicFile from 'src/files/publicFile.entity';
+import PrivateFile from 'src/privateFiles/privateFiles.entity';
  
 @Entity()
 class User {
@@ -27,6 +29,22 @@ class User {
 
   @OneToMany(() => PostEntity, (post: PostEntity) => post.author)
   public posts: PostEntity[]
+
+  @JoinColumn()
+  @OneToOne(
+    () => PublicFile,
+    {
+      eager: true,
+      nullable: true
+    }
+  )
+  public avatar?: PublicFile;
+
+  @OneToMany(
+    () => PrivateFile,
+    (file: PrivateFile) => file.owner
+  )
+  public files: PrivateFile[];
 }
  
 export default User;
