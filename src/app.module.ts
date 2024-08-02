@@ -9,11 +9,15 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { CategoriesModule } from './category/category.module';
 import { PrivateFilesModule } from './privateFiles/privateFiles.module';
 import { PublicFilesModule } from './files/publicFiles.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     PostsModule,
     AuthenticationModule,
+    EmailModule,
     CategoriesModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
@@ -29,6 +33,9 @@ import { PublicFilesModule } from './files/publicFiles.module';
         AWS_SECRET_ACCESS_KEY: Joi.string().required(),
         AWS_PUBLIC_BUCKET_NAME: Joi.string().required(),
         PORT: Joi.number(),
+        EMAIL_SERVICE: Joi.string().required(),
+        EMAIL_USER: Joi.string().required(),
+        EMAIL_PASSWORD: Joi.string().required(),
       })
     }),
     DatabaseModule,
