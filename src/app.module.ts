@@ -14,6 +14,7 @@ import { EmailModule } from './email/email.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { PostsResolver } from './post/post.resolver';
+import { PubSubModule } from './pubSub/pubSub.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { PostsResolver } from './post/post.resolver';
       useFactory: (configService: ConfigService) => ({
         playground: Boolean(configService.get('GRAPHQL_PLAYGROUND')),
         autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+        installSubscriptionHandlers: true
       })
     }),
     PostsModule,
@@ -53,6 +55,7 @@ import { PostsResolver } from './post/post.resolver';
     DatabaseModule,
     PrivateFilesModule,
     PublicFilesModule,
+    PubSubModule,
     PostsResolver
   ],
   controllers: [],

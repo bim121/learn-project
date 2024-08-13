@@ -2,7 +2,7 @@ import { Transform } from "class-transformer";
 import Category from "src/category/category.entity";
 import Comment from "src/comment/comment.entity";
 import User from "src/user/user.entity";
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from "typeorm";
 
 @Entity()
 class PostEntity{
@@ -20,6 +20,9 @@ class PostEntity{
 
     @ManyToOne(() => User, (author: User) => author.posts)
     public author: User;
+
+    @RelationId((post: PostEntity) => post.author)
+    public authorId: number;
 
     @ManyToMany(() => Category)
     @JoinTable()
