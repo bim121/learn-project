@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PostsModule } from './post/post.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
 import { APP_FILTER } from '@nestjs/core';
@@ -11,10 +11,21 @@ import { PrivateFilesModule } from './privateFiles/privateFiles.module';
 import { PublicFilesModule } from './files/publicFiles.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EmailModule } from './email/email.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
+import { PostsResolver } from './post/post.resolver';
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
+    GraphQLModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        playground: Boolean(configService.get('GRAPHQL_PLAYGROUND')),
+        autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      })
+    }),
     PostsModule,
     AuthenticationModule,
     EmailModule,
@@ -22,6 +33,7 @@ import { EmailModule } from './email/email.module';
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         POSTGRES_HOST: Joi.string().required(),
+        GRAPHQL_PLAYGROUND: Joi.number(),
         POSTGRES_PORT: Joi.number().required(),
         POSTGRES_USER: Joi.string().required(),
         POSTGRES_PASSWORD: Joi.string().required(),
@@ -41,6 +53,7 @@ import { EmailModule } from './email/email.module';
     DatabaseModule,
     PrivateFilesModule,
     PublicFilesModule,
+    PostsResolver
   ],
   controllers: [],
   providers: [
