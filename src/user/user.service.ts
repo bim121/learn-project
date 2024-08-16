@@ -25,6 +25,12 @@ export class UsersService{
         throw new HttpException("User with this email does not exist", HttpStatus.NOT_FOUND);
     }
 
+    async setTwoFactorAuthenticationSecret(secret: string, userId: number) {
+      return this.userRepository.update(userId, {
+        twoFactorAuthenticationSecret: secret
+      });
+    }
+
     async create(userData: CreateUserDto){
         const newUser = await this.userRepository.create(userData);
         await this.userRepository.save(newUser);
@@ -71,5 +77,11 @@ export class UsersService{
           return file;
         }
         throw new UnauthorizedException();
+    }
+
+    async turnOnTwoFactorAuthentication(userId: number) {
+      return this.userRepository.update(userId, {
+        isTwoFactorAuthenticationEnabled: true
+      });
     }
 }

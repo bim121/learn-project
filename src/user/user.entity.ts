@@ -12,6 +12,9 @@ class User {
  
   @Column({ unique: true })
   public email: string;
+
+  @Column({ nullable: true })
+  public twoFactorAuthenticationSecret?: string;
  
   @Column()
   public name: string;
@@ -45,6 +48,9 @@ class User {
     (file: PrivateFile) => file.owner
   )
   public files: PrivateFile[];
+
+  @Column({ default: false })
+  public isTwoFactorAuthenticationEnabled: boolean;
 }
  
 export default User;
