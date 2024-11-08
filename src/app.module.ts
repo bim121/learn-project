@@ -15,6 +15,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { PostsResolver } from './post/post.resolver';
 import { PubSubModule } from './pubSub/pubSub.module';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -27,6 +28,16 @@ import { PubSubModule } from './pubSub/pubSub.module';
         autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
         installSubscriptionHandlers: true
       })
+    }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        redis: {
+          host: configService.get('REDIS_HOST'),
+          port: Number(configService.get('REDIS_PORT')),
+        },
+      }),
+      inject: [ConfigService],
     }),
     PostsModule,
     AuthenticationModule,
@@ -50,6 +61,8 @@ import { PubSubModule } from './pubSub/pubSub.module';
         EMAIL_SERVICE: Joi.string().required(),
         EMAIL_USER: Joi.string().required(),
         EMAIL_PASSWORD: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().required(),
       })
     }),
     DatabaseModule,

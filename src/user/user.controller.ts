@@ -6,6 +6,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { UsersService } from './user.service';
 import { FindOneParams } from 'src/utils/findOneParams';
+import { Response } from 'express';
  
 @Controller('users')
 export class UsersController {
